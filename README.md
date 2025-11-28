@@ -36,24 +36,21 @@ Bu projeyi yerel makinenizde çalıştırmak için aşağıdaki adımları takip
 Projenin çalışması için bilgisayarınızda Node.js (ve npm) kurulu olmalıdır.
 
 1. Depoyu Klonlama
-Bash
-
 git clone https://github.com/Berkangor/book-tracker.git
+
 cd book-tracker
-2. Bağımlılıkları Yükleme
+
+3. Bağımlılıkları Yükleme
 Projenin bağımlılıklarını ve ID oluşturma kütüphanesini (uuid) yükleyin:
 
-Bash
-
 npm install
+
 # Veya: npm install --legacy-peer-deps
+
 3. Geliştirme Sunucusunu Başlatma
 Projenizi yerel ortamda çalıştırmak için:
 
-Bash
-
 npm run dev
-Uygulama genellikle http://localhost:5173 adresinde çalışmaya başlayacaktır.
 
 📝 Kullanım
 Kitap Ekleme

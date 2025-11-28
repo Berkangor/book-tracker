@@ -5,28 +5,29 @@
  * @property {string} title
  * @property {string} author
  * @property {'okundu' | 'okunacak'} status
+ * @property {string} category // 💥 YENİ: Kategori alanı eklendi
  * // ... diğer kitap özellikleri
  */
 
 /**
- * Kitap listesini arama metnine ve okuma durumuna göre filtreler.
+ * Kitap listesini arama metnine, okuma durumuna ve kategoriye göre filtreler.
  *
  * @param {{ 
  * books: Book[], 
  * searchText: string, 
- * status: 'hepsi' | 'okundu' | 'okunacak' 
+ * status: 'hepsi' | 'okundu' | 'okunacak',
+ * category: 'all' | string // 💥 YENİ: Kategori filtresi eklendi
  * }} options
  * @returns {Book[]} - Filtrelenmiş kitapların dizisi.
  */
-export function filterBooks({ books, searchText, status }) {
+export function filterBooks({ books, searchText, status, category }) { // 💥 category burada parçalandı
     
-    // 1. Arama Metnini Standartlaştırma
+    // Arama Metnini Standartlaştırma
     const normalizedSearch = searchText.trim().toLowerCase();
 
-    // 2. Filtreleme İşlemi
     return books.filter((book) => {
         
-        // --- Durum (Status) Filtresi ---
+        // --- 1. Durum (Status) Filtresi ---
         // Eğer durum "hepsi" değilse VE kitabın durumu seçilen durumla eşleşmiyorsa FALSE döndür
         const passesStatusFilter = 
             status === "hepsi" || book.status === status;
@@ -35,8 +36,17 @@ export function filterBooks({ books, searchText, status }) {
             return false;
         }
 
-        // --- Arama (Search) Filtresi ---
-        // Eğer arama metni boşsa, bu filtreyi geçer (TRUE döndürür).
+        // 💥 2. YENİ: Kategori Filtresi ---
+        // Eğer kategori "all" (hepsi) değilse VE kitabın kategorisi seçilen kategoriyle eşleşmiyorsa FALSE döndür
+        const passesCategoryFilter = 
+            category === "all" || book.category === category; 
+
+        if (!passesCategoryFilter) {
+            return false;
+        }
+
+        // --- 3. Arama (Search) Filtresi ---
+        // Eğer arama metni boşsa, bu filtre zincirini geçer (TRUE döndürür).
         if (!normalizedSearch) {
             return true;
         }

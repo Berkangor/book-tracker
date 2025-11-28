@@ -1,25 +1,42 @@
-/* Gelişmiş CSS Sürümü */
+/* =====================================================
+   📚 Basit Kitap Takipçisi – Gelişmiş Tema
+   - Işık / Karanlık tema destekli
+   - Card hover efektleri
+   - Erişilebilir focus ring
+   - Küçük animasyonlar
+   ===================================================== */
 
 /* === KÖK DEĞİŞKENLERİ (COLOR PALETTE & SIZING) === */
 :root {
     /* Renkler */
     --clr-primary: #4f46e5;
-    /* İndigo-600 */
+    /* Indigo-600 */
+    --clr-primary-soft: #eef2ff;
+    /* Indigo-50 */
     --clr-primary-dark: #4338ca;
-    /* İndigo-700 */
+    /* Indigo-700 */
+
     --clr-background: #f8fafc;
     /* Slate-50 */
     --clr-surface: #ffffff;
-    --clr-text-main: #1e293b;
-    /* Slate-800 */
+    --clr-surface-muted: #f1f5f9;
+    /* Kart içi soft alanlar */
+
+    --clr-text-main: #0f172a;
+    /* Slate-900 */
     --clr-text-secondary: #64748b;
     /* Slate-500 */
+
     --clr-border: #cbd5e1;
     /* Slate-300 */
+    --clr-border-subtle: #e2e8f0;
+    /* Slate-200 */
+
     --clr-error: #ef4444;
-    /* Kırmızı-500 */
+    /* Red-500 */
     --clr-error-dark: #dc2626;
-    /* Kırmızı-600 */
+    /* Red-600 */
+
     --clr-accent: #f59e0b;
     /* Amber-500 (Yıldızlar için) */
 
@@ -28,11 +45,32 @@
     font-size: 16px;
 
     /* Gölgeler */
-    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.06);
+    --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.06);
+    --shadow-md: 0 4px 6px rgba(15, 23, 42, 0.1), 0 2px 4px rgba(15, 23, 42, 0.08);
+    --shadow-lg: 0 12px 30px rgba(15, 23, 42, 0.15);
 
     /* Geçişler */
-    --transition-fast: all 0.15s ease-in-out;
+    --transition-fast: 150ms ease-in-out;
+}
+
+/* 💥 KARANLIK MOD TANIMLAMASI */
+/* React tarafında: document.body.classList.toggle('dark-theme') */
+body.dark-theme {
+    --clr-background: #020617;
+    /* Slate-950 */
+    --clr-surface: #0f172a;
+    /* Slate-900 */
+    --clr-surface-muted: #111827;
+    /* Slate-900 koyu */
+    --clr-text-main: #e5e7eb;
+    /* Zincirlenmiş açık metin */
+    --clr-text-secondary: #94a3b8;
+    --clr-border: #1f2937;
+    --clr-border-subtle: #1f2937;
+
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.7);
+    --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.35);
 }
 
 /* === RESET VE TEMEL STİL === */
@@ -42,20 +80,37 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     margin: 0;
     min-height: 100vh;
     background-color: var(--clr-background);
     color: var(--clr-text-main);
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+/* Genel tipografi iyileştirmeleri */
+h1,
+h2,
+h3,
+h4 {
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+p {
+    margin: 0;
 }
 
 /* === ANA YAPI VE LAYOUT === */
 .app {
     max-width: 1140px;
-    /* Biraz daha genişletildi */
     margin: 0 auto;
     padding: 2rem 1.5rem 4rem;
-    /* Padding artırıldı */
 }
 
 .app-header {
@@ -64,7 +119,6 @@ body {
 }
 
 .app-header h1 {
-    margin: 0;
     font-size: 2rem;
     color: var(--clr-primary-dark);
 }
@@ -74,10 +128,22 @@ body {
     color: var(--clr-text-secondary);
 }
 
+.app-header .app-subtitle-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    background: var(--clr-primary-soft);
+    color: var(--clr-primary-dark);
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
 .layout-grid {
     display: grid;
     gap: 1.5rem;
-    /* Aralık artırıldı */
 }
 
 .left-column,
@@ -90,29 +156,43 @@ body {
 /* === KARTLAR === */
 .card {
     background: var(--clr-surface);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--clr-border-subtle);
     border-radius: 1rem;
-    /* Köşeler yumuşatıldı */
     padding: 1.5rem;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast),
+        border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.card:hover {
+    transform: translateY(-2px);
     box-shadow: var(--shadow-md);
-    /* Daha belirgin gölge */
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    /* Hafif border eklendi */
+    border-color: var(--clr-border);
 }
 
 .card-title {
     font-size: 1.1rem;
     font-weight: 700;
-    margin: 0 0 1rem;
-    border-bottom: 1px solid #f1f5f9;
-    /* Başlık ayırıcı eklendi */
-    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--clr-border-subtle);
+    padding-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card-title span.badge-pill {
+    font-size: 0.75rem;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    background-color: var(--clr-primary-soft);
+    color: var(--clr-primary-dark);
 }
 
 .card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* Başlık hizalaması dikeyde ortalandı */
 }
 
 /* === FORMLAR VE GİRİŞ ALANLARI === */
@@ -140,37 +220,75 @@ body {
 }
 
 input,
-select {
-    border-radius: 0.6rem;
+select,
+textarea {
+    background-color: var(--clr-surface);
+    color: var(--clr-text-main);
     border: 1px solid var(--clr-border);
+    border-radius: 0.6rem;
     padding: 0.6rem 0.8rem;
-    font-size: 1rem;
+    font-size: 0.95rem;
     outline: none;
-    transition: var(--transition-fast);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast),
+        background-color var(--transition-fast), color var(--transition-fast);
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: var(--clr-text-secondary);
+    opacity: 0.8;
 }
 
 input:focus,
-select:focus {
+select:focus,
+textarea:focus {
     border-color: var(--clr-primary);
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-    /* Daha belirgin bir odak halkası */
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+
+/* Hata durumları için yardımcı class'lar */
+.input-error {
+    border-color: var(--clr-error) !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+.error-text {
+    color: var(--clr-error);
+    font-size: 0.8rem;
 }
 
 /* === BUTONLAR === */
 .btn {
     border-radius: 0.5rem;
-    /* Tam yuvarlak yerine hafif yuvarlak kenarlar */
     border: none;
     padding: 0.6rem 1.2rem;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.4rem;
     font-weight: 600;
-    transition: var(--transition-fast);
-    box-shadow: var(--shadow-sm);
+    transition: background-color var(--transition-fast), color var(--transition-fast),
+        border-color var(--transition-fast), box-shadow var(--transition-fast),
+        transform var(--transition-fast);
+    box-shadow: var(--shadow-xs);
+}
+
+.btn:active {
+    transform: translateY(1px) scale(0.99);
+    box-shadow: none;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Focus görünürlüğü */
+.btn:focus-visible {
+    outline: 2px solid var(--clr-primary);
+    outline-offset: 2px;
 }
 
 .btn.primary {
@@ -178,9 +296,9 @@ select:focus {
     color: var(--clr-surface);
 }
 
-.btn.primary:hover {
+.btn.primary:hover:not(:disabled) {
     background-color: var(--clr-primary-dark);
-    box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.3);
+    box-shadow: 0 4px 8px rgba(79, 70, 229, 0.35);
 }
 
 .btn.outline {
@@ -189,7 +307,7 @@ select:focus {
     color: var(--clr-text-main);
 }
 
-.btn.outline:hover {
+.btn.outline:hover:not(:disabled) {
     border-color: var(--clr-primary);
     color: var(--clr-primary);
 }
@@ -199,20 +317,40 @@ select:focus {
     color: var(--clr-surface);
 }
 
-.btn.danger:hover {
+.btn.danger:hover:not(:disabled) {
     background-color: var(--clr-error-dark);
 }
 
 .btn.small {
     padding: 0.35rem 0.8rem;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
 }
 
-/* === ROZETLER (BADGES) === */
+/* Tema toggle için opsiyonel buton */
+.theme-toggle-btn {
+    border-radius: 999px;
+    border: 1px solid var(--clr-border);
+    background: var(--clr-surface-muted);
+    color: var(--clr-text-secondary);
+    padding: 0.35rem 0.9rem;
+    font-size: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.theme-toggle-btn:hover {
+    border-color: var(--clr-primary);
+    color: var(--clr-primary);
+}
+
+/* === ROZETLER (BADGES) ve ETİKETLER === */
 .badge {
     display: inline-flex;
     align-items: center;
-    border-radius: 0.5rem;
+    border-radius: 999px;
     padding: 0.2rem 0.75rem;
     font-size: 0.8rem;
     font-weight: 600;
@@ -232,6 +370,17 @@ select:focus {
     /* Blue-700 */
 }
 
+.tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    background: var(--clr-surface-muted);
+    font-size: 0.75rem;
+    color: var(--clr-text-secondary);
+}
+
+/* === METİN YARDIMCILAR === */
 .muted {
     color: var(--clr-text-secondary);
 }
@@ -248,7 +397,8 @@ select:focus {
 }
 
 .book-card {
-    /* book-card artık bir card içinde yer alıyorsa bu stiller eklenir */
+    display: flex;
+    flex-direction: column;
     gap: 0.75rem;
 }
 
@@ -259,13 +409,11 @@ select:focus {
 }
 
 .book-title {
-    margin: 0;
     font-size: 1.1rem;
     font-weight: 700;
 }
 
 .book-author {
-    margin: 0;
     font-size: 0.95rem;
     color: var(--clr-text-secondary);
 }
@@ -275,15 +423,23 @@ select:focus {
     align-items: center;
     justify-content: space-between;
     padding-top: 0.5rem;
-    border-top: 1px dashed rgba(0, 0, 0, 0.05);
+    border-top: 1px dashed var(--clr-border);
+}
+
+.book-status {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
 }
 
 .book-actions {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.75rem;
     margin-top: 0.5rem;
 }
 
+/* Yıldızlar */
 .stars {
     font-size: 1rem;
 }
@@ -296,7 +452,7 @@ select:focus {
     color: var(--clr-accent);
 }
 
-/* === DİĞER ALANLAR === */
+/* === ÖNERİLER BÖLÜMÜ === */
 .recommendations .card-title {
     margin-bottom: 0.5rem;
 }
@@ -311,32 +467,70 @@ select:focus {
     margin-bottom: 0.4rem;
 }
 
+/* === FİLTRE BÖLÜMÜ === */
 .filters-grid {
     display: grid;
     gap: 1rem;
 }
 
+/* === BOŞ DURUM === */
 .empty {
     text-align: center;
     padding: 2rem 0;
     color: var(--clr-text-secondary);
 }
 
+/* === FOOTER === */
 .app-footer {
     margin-top: 3rem;
     padding-top: 1rem;
-    border-top: 1px solid var(--clr-border);
+    border-top: 1px solid var(--clr-border-subtle);
     text-align: center;
     font-size: 0.85rem;
     color: var(--clr-text-secondary);
 }
 
+/* === CARD ANİMASYONU (opsiyonel) === */
+.card-animated {
+    animation: cardFadeIn 260ms ease-out;
+}
+
+@keyframes cardFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* === SCROLLBAR STİLİ (Destekleyen tarayıcılar için) === */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--clr-primary) var(--clr-background);
+}
+
+*::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+    background: var(--clr-background);
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: var(--clr-primary);
+    border-radius: 999px;
+}
+
 /* === RESPONSIVE DÜZELTMELER === */
 @media (min-width: 768px) {
     .layout-grid {
-        /* Ekran 768px'den büyük olduğunda düzeni korur */
         grid-template-columns: minmax(0, 1.1fr) minmax(0, 2fr);
-        /* Sol sütun biraz daraltıldı */
         gap: 2rem;
     }
 
@@ -344,5 +538,15 @@ select:focus {
     .filters-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 1rem;
+    }
+}
+
+/* Hareket hassasiyeti olan kullanıcılar için animasyon azaltma */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        scroll-behavior: auto !important;
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
     }
 }

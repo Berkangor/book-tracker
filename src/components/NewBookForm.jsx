@@ -6,6 +6,7 @@ import { useState } from "react";
  * @property {string} title
  * @property {string} author
  * @property {'okundu' | 'okunacak'} status
+ * @property {string} category - Kitabın türü
  * @property {string | undefined} endDate
  * @property {number | undefined} rating
  */
@@ -18,18 +19,19 @@ export function NewBookForm({ onSubmit }) {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [status, setStatus] = useState("okunacak"); // "okundu" | "okunacak"
+  const [category, setCategory] = useState("roman"); // 💥 YENİ: Kategori state'i
   const [endDate, setEndDate] = useState("");
   const [rating, setRating] = useState("");
   const [error, setError] = useState(null); 
 
   const isRead = status === "okundu";
 
+  // Durum (status) değiştiğinde Bitiş Tarihi ve Puanı temizler.
   const handleStatusChange = (e) => {
     const newStatus = e.target.value;
     setStatus(newStatus);
     
-    // 💥 ÖNEMLİ ÇÖZÜM 1: Durum 'okunacak' olduğunda ilgili state'leri sıfırla.
-    // Bu, kullanıcının yanlışlıkla önceki puan/tarih verisini göndermesini engeller.
+    // Mantıksal tutarlılık için, okunacak duruma geçtiyse tarih/puan temizlenir.
     if (newStatus === 'okunacak') {
         setEndDate('');
         setRating('');
@@ -49,7 +51,6 @@ export function NewBookForm({ onSubmit }) {
     // 2. Gelişmiş Validasyon: Puan ve Durum Kontrolü
     const isRated = rating && Number(rating) >= 1;
     if (isRated && status !== "okundu") {
-      // Bu, kullanıcı JavaScript'i devre dışı bırakıp select kutularını manipüle etse bile koruma sağlar.
       setError("Puanlama sadece 'Okundu' durumundaki kitaplar için yapılabilir.");
       return;
     }
@@ -59,9 +60,10 @@ export function NewBookForm({ onSubmit }) {
       title: title.trim(),
       author: author.trim(),
       status,
+      category, // 💥 YENİ ALAN EKLENDİ
       // Tarih ve puan sadece isRead true ise ve değerleri varsa payload'a eklenir.
       endDate: isRead && endDate ? endDate : undefined,
-      rating: isRead && isRated ? Number(rating) : undefined, // Kontrolü güçlendirildi
+      rating: isRead && isRated ? Number(rating) : undefined,
     };
 
     onSubmit(payload);
@@ -71,6 +73,7 @@ export function NewBookForm({ onSubmit }) {
     setAuthor("");
     setEndDate("");
     setRating("");
+    setCategory("roman"); // 💥 Kategori de sıfırlandı
     setStatus("okunacak");
   };
 
@@ -85,6 +88,7 @@ export function NewBookForm({ onSubmit }) {
       )}
 
       <div className="form-grid">
+        {/* Satır 1: Başlık */}
         <div className="form-group">
           <label htmlFor="title">Kitap Adı</label>
           <input
@@ -97,6 +101,7 @@ export function NewBookForm({ onSubmit }) {
           />
         </div>
 
+        {/* Satır 2: Yazar */}
         <div className="form-group">
           <label htmlFor="author">Yazar</label>
           <input
@@ -109,20 +114,37 @@ export function NewBookForm({ onSubmit }) {
           />
         </div>
 
-        {/* 💥 ÇÖZÜM 1 UYGULAMASI */}
+        {/* Satır 3: Okuma Durumu */}
         <div className="form-group">
           <label htmlFor="status">Okuma Durumu</label>
           <select
             id="status"
             value={status}
-            onChange={handleStatusChange} // Yeni handler kullanıldı
+            onChange={handleStatusChange} 
           >
             <option value="okunacak">Okunacak</option>
             <option value="okundu">Okundu</option>
           </select>
         </div>
+        
+        {/* Satır 4: Kategori (YENİ ALAN) */}
+        <div className="form-group">
+            <label htmlFor="category">Kategori</label>
+            <select
+                id="category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+            >
+                <option value="roman">📖 Roman</option>
+                <option value="selfhelp">🌱 Kişisel Gelişim</option>
+                <option value="science">🔬 Bilim/Teknoloji</option>
+                <option value="history">🏰 Tarih</option>
+                <option value="thriller">🔎 Polisiye/Gerilim</option>
+                <option value="unknown">🔖 Diğer</option>
+            </select>
+        </div>
 
-        {/* 💥 ÇÖZÜM 2 UYGULAMASI */}
+        {/* Satır 5: Bitiş Tarihi (Okundu ise Etkin) */}
         <div className="form-group">
           <label htmlFor="endDate">Bitiş Tarihi {isRead ? "" : "(Sadece Okundu İçin)"}</label>
           <input
@@ -130,19 +152,17 @@ export function NewBookForm({ onSubmit }) {
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            // 💥 Sadece isRead kontrolü yapılır, böylece status 'okundu' ise seçilebilir.
             disabled={!isRead} 
           />
         </div>
 
-        {/* 💥 ÇÖZÜM 3 UYGULAMASI */}
+        {/* Satır 6: Puan (Okundu ise Etkin) */}
         <div className="form-group">
           <label htmlFor="rating">Puan (1-5)</label>
           <select
             id="rating"
             value={rating}
             onChange={(e) => setRating(e.target.value || "")}
-            // 💥 Sadece isRead kontrolü yapılır, böylece status 'okundu' ise seçilebilir.
             disabled={!isRead} 
           >
             <option value="">Seçilmedi</option>

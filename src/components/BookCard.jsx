@@ -1,10 +1,28 @@
 // BookCard.jsx
+
+// 💡 Yardımcı Fonksiyon: Kategori Koduna göre İkon Döndürür
+const CATEGORY_ICONS = {
+  roman: '📖',
+  selfhelp: '🌱',
+  science: '🔬',
+  history: '🏰',
+  thriller: '🔎',
+  unknown: '🔖',
+};
+
+function getCategoryIcon(categoryCode) {
+    const code = categoryCode ? categoryCode.toLowerCase() : 'unknown';
+    return CATEGORY_ICONS[code] || CATEGORY_ICONS.unknown;
+}
+
+
 /**
  * @typedef {object} Book
  * @property {string} id - Kitabın benzersiz kimliği.
  * @property {string} title - Kitabın başlığı.
  * @property {string} author - Kitabın yazarı.
  * @property {'okundu' | 'okunacak'} status - Kitabın okuma durumu.
+ * @property {string} category - Kitabın türü/kategorisi. 💥 YENİ EKLENDİ
  * @property {number | null} rating - 1 ile 5 arasında puan.
  * @property {string | null} endDate - Okuma bitiş tarihi (ISO formatı).
  */
@@ -14,12 +32,12 @@
  * @param {{ book: Book, onToggleStatus: (id: string) => void, onDelete: (id: string) => void }} props
  */
 export function BookCard({ book, onToggleStatus, onDelete }) {
-  const { id, title, author, status, rating, endDate } = book;
+  const { id, title, author, status, rating, endDate, category } = book; // 💥 category burada parçalandı
   
   // Unicode Yıldız Karakteri (Daha güvenilir)
   const STAR_CHAR = '\u2605'; 
-  
   const isRead = status === "okundu";
+  const icon = getCategoryIcon(category); // 💥 Kategoriye ait ikon alındı
 
   const renderStars = () => {
     if (!rating || rating < 1) return <span className="muted small">Puanlanmadı</span>;
@@ -46,9 +64,15 @@ export function BookCard({ book, onToggleStatus, onDelete }) {
   return (
     <article className="book-card card">
       
-      {/* BAŞLIK VE YAZAR */}
+      {/* BAŞLIK, YAZAR VE İKON */}
       <div className="book-main">
-        <h3 className="book-title">{title}</h3>
+        <h3 className="book-title">
+            {/* 💥 İKON GÖSTERİMİ */}
+            <span style={{ marginRight: '8px', fontSize: '1.2em' }} role="img" aria-label={`Kategori: ${category}`}>
+                {icon}
+            </span>
+            {title}
+        </h3>
         <p className="book-author muted">{author}</p>
       </div>
 

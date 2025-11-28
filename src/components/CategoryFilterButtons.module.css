@@ -1,0 +1,50 @@
+/* components/CategoryFilterButtons.module.css */
+
+.categoryContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 1rem;
+    /* 💥 Değişken kullanıldı: Kart yüzeyi ile aynı renk olmalı */
+    background: var(--clr-surface);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-sm);
+    transition: background-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.button {
+    /* 💥 Değişken kullanıldı: Sessiz/Hafif yüzey rengini almalı */
+    background: var(--clr-surface-muted);
+    color: var(--clr-text-secondary);
+    /* Metin rengi temaya uyum sağlar */
+    border: 1px solid var(--clr-border-subtle);
+    /* 💥 Değişken kullanıldı */
+    border-radius: 0.75rem;
+    padding: 0.5rem 0.8rem;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: var(--transition-fast);
+    display: flex;
+    align-items: center;
+}
+
+.button:hover {
+    /* 💥 Değişken kullanıldı: Hafif koyu bir gri tonuna geçiş yapmalı */
+    background: var(--clr-border);
+}
+
+.active {
+    background-color: var(--clr-primary);
+    /* 💥 Değişken kullanıldı: Metin rengi yüzey rengini almalı (Karanlık Modda beyaz, Aydınlık Modda beyaz) */
+    color: var(--clr-surface);
+    border-color: var(--clr-primary-dark);
+    box-shadow: var(--shadow-sm);
+}
+
+.active:hover {
+    background-color: var(--clr-primary-dark);
+}
+
+.buttonText {
+    font-weight: 600;
+}
